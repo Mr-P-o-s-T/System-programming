@@ -42,7 +42,7 @@ using namespace std;
 #define BUTTN_HEIGTH 50
 
 struct {
-	float value;
+	int value;
 	bool filled = false, stuck = true;
 } x[3];
 
@@ -54,7 +54,8 @@ struct mainThread{
 PROCESS_INFORMATION pi[2] = { 0 };
 STARTUPINFO si[2] = { 0 };
 HANDLE hP[2] = { 0 }, promptThreadHandle = NULL;
-bool /*isIgnored = false,*/ isWait = false, isCancelled = false, isAnswer = false, isPrompted = false;
+bool isWait = false, isCancelled = false, isAnswer = false, isPrompted = false;
+clock_t promptTime = clock();
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -66,7 +67,7 @@ void closeChildProcessesHandles(PROCESS_INFORMATION *pi);
 DWORD promptThread(LPVOID x);
 HANDLE createPromptThread();
 
-float binOperation(float a, float b);
+int binOperation(int a, int b);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	mThread.mainThreadID = GetCurrentThreadId();
@@ -96,21 +97,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	killProcess(&pi[1]);
 	closeChildProcessesHandles(pi);
 	if (promptThreadHandle) CloseHandle(promptThreadHandle);
-	return uMsg.wParam;
+	return (int) uMsg.wParam;
 }
 
 int getChekedRadBtn(HWND *rbtnArr) {
 	static int group = 0;
-	for (size_t i = 0; i < 5; i++) 
+	for (int i = 0; i < 5; i++) 
 		if (Button_GetState(rbtnArr[i]) == BST_CHECKED) {
 			group = 1 - group;
 			return (group ? RD_BTN_0 : RD_BTN_5) + i;
 		}
+	return 0;
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	RegisterHotKey(hwnd, 1, 0, VK_ESCAPE);
 	TCHAR res[256] = TEXT("\0");
-	DWORD waitingResult;
 	int len;
 	static clock_t begin = 0, end = 0;
 
@@ -120,13 +122,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		else if ((RD_BTN_0 <= (int)wParam) && ((int)wParam <= RD_BTN_4)) CheckRadioButton(hwnd, RD_BTN_0, RD_BTN_4, (int) wParam);
 		else if ((RD_BTN_5 <= (int)wParam) && ((int)wParam <= RD_BTN_9)) CheckRadioButton(hwnd, RD_BTN_5, RD_BTN_9, (int)wParam);
 		break;
+	case WM_HOTKEY:
+		if (wParam == 1) PostMessage(mThread.mainWindow, UWM_CANCELLED, 0, 0);
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 	case WM_COPYDATA:
 		if (!isCancelled) {
 			if ((DWORD)wParam == pi[0].dwThreadId) {
-				x[1].value = *((float *)((COPYDATASTRUCT *)lParam)->lpData);
+				x[1].value = *((int *)((COPYDATASTRUCT *)lParam)->lpData);
 				x[1].filled = true;
 				x[1].stuck = false;
 				if (!x[1].value) {
@@ -135,7 +140,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 				}
 			}
 			else if ((DWORD)wParam == pi[1].dwThreadId) {
-				x[2].value = *(float *)((COPYDATASTRUCT *)lParam)->lpData;
+				x[2].value = *(int *)((COPYDATASTRUCT *)lParam)->lpData;
 				x[2].filled = true;
 				x[2].stuck = false;
 				if (!x[2].value) {
@@ -154,7 +159,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		if (!isPrompted) {
 			if (!wParam) {
 				if (x[1].filled && x[2].filled) {
-					_stprintf(res, TEXT("f(%f) = %f\ng(%f) = %f\nResult is: %f"), x[0].value, x[1].value, x[0].value, x[2].value, binOperation(x[1].value, x[2].value));
+					_stprintf(res, TEXT("f(%d) = %d\ng(%d) = %d\nResult is: %d\nTime: %f ms"), x[0].value, x[1].value, x[0].value, x[2].value, binOperation(x[1].value, x[2].value), ((double)clock() - promptTime) / CLOCKS_PER_SEC * 1000);
 					if (!isCancelled && !isAnswer) {
 						isAnswer = true;
 						MessageBox(NULL, res, TEXT("Results:"), MB_ICONINFORMATION | MB_OK);
@@ -163,7 +168,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 					else if (!isAnswer) PostMessage(mThread.mainWindow, UWM_CHECK_CALCULATION, 0, 0);
 				}
 				else if (x[1].filled && !x[1].value) {
-					_stprintf(res, TEXT("f(%f) = %f\nResult is: %f"), x[0].value, x[1].value, 0.0f);
+					_stprintf(res, TEXT("f(%d) = %d\nResult is: %d\nTime: %f ms"), x[0].value, x[1].value, 0, ((double)clock() - promptTime) / CLOCKS_PER_SEC * 1000);
 					if (!isCancelled && !isAnswer) {
 						isAnswer = true;
 						MessageBox(NULL, res, TEXT("Results:"), MB_ICONINFORMATION | MB_OK);
@@ -172,7 +177,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 					else if (!isAnswer) PostMessage(mThread.mainWindow, UWM_CHECK_CALCULATION, 0, 0);
 				}
 				else if (x[2].filled && !x[2].value) {
-					_stprintf(res, TEXT("g(%f) = %f\nResult is: %f"), x[0].value, x[2].value, 0.0f);
+					_stprintf(res, TEXT("g(%d) = %d\nResult is: %d\nTime: %f ms"), x[0].value, x[2].value, 0, ((double)clock() - promptTime) / CLOCKS_PER_SEC * 1000);
 					if (!isCancelled && !isAnswer) {
 						isAnswer = true;
 						MessageBox(NULL, res, TEXT("Results:"), MB_ICONINFORMATION | MB_OK);
@@ -186,8 +191,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 					if (!isAnswer) {
 						isWait = false;
 						if (x[1].stuck && x[2].stuck) _stprintf(res, TEXT("Both processes are presumpted stuck..."));
-						else if (x[1].stuck) _stprintf(res, TEXT("f(%f) - presumpted stuck...\ng(%f) = %f"), x[0].value, x[0].value, x[2].value);
-						else if (x[2].stuck) _stprintf(res, TEXT("f(%f) = %f\ng(%f) - presumpted stuck..."), x[0].value, x[1].value, x[0].value);
+						else if (x[1].stuck) _stprintf(res, TEXT("f(%d) - presumpted stuck...\ng(%d) = %d"), x[0].value, x[0].value, x[2].value);
+						else if (x[2].stuck) _stprintf(res, TEXT("f(%d) = %d\ng(%d) - presumpted stuck..."), x[0].value, x[1].value, x[0].value);
 
 						MessageBox(NULL, res, TEXT("Results:"), MB_ICONINFORMATION | MB_OK);
 						PostMessage(mThread.mainWindow, WM_CLOSE, 0, 0);
@@ -208,14 +213,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		else PostMessage(mThread.mainWindow, UWM_CHECK_CALCULATION, 0, 0);
 		break;
 	case UWM_CANCELLED:
-		if (x[1].filled && x[2].filled) _stprintf(res, TEXT("f(%f) = %f\ng(%f) = %f\nResult is: %f"), x[0].value, x[1].value, x[0].value, x[2].value, binOperation(x[1].value, x[2].value));
+		if (x[1].filled && x[2].filled) _stprintf(res, TEXT("f(%d) = %d\ng(%d) = %d\nResult is: %d"), x[0].value, x[1].value, x[0].value, x[2].value, binOperation(x[1].value, x[2].value));
 		else if (x[1].filled) {
-			if (!x[1].value) _stprintf(res, TEXT("f(%f) = %f\nResult is: %f"), x[0].value, x[1].value, 0.0f);
-			else _stprintf(res, TEXT("f(%f) = %f\ng(%f) - calculation cancelled by user..."), x[0].value, x[1].value, x[0].value);
+			if (!x[1].value) _stprintf(res, TEXT("f(%d) = %d\nResult is: %d"), x[0].value, x[1].value, 0);
+			else _stprintf(res, TEXT("f(%d) = %d\ng(%d) - calculation cancelled by user..."), x[0].value, x[1].value, x[0].value);
 		}
 		else if (x[2].filled) {
-			if (!x[2].value) _stprintf(res, TEXT("g(%f) = %f\nResult is: %f"), x[0].value, x[2].value, 0.0f);
-			else _stprintf(res, TEXT("f(%f) - calculation cancelled by user...\ng(%f) = %f"), x[0].value, x[0].value, x[2].value);
+			if (!x[2].value) _stprintf(res, TEXT("g(%d) = %d\nResult is: %d"), x[0].value, x[2].value, 0);
+			else _stprintf(res, TEXT("f(%d) - calculation cancelled by user...\ng(%d) = %d"), x[0].value, x[0].value, x[2].value);
 		}
 		else _stprintf(res, TEXT("Calculation is cancelled by user..."));
 		isCancelled = true;
@@ -229,7 +234,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		if (len = GetWindowTextLength(mThread.mainEdit) + 1) {
 			TCHAR buff[1024];
 			GetWindowText(mThread.mainEdit, buff, len);
-			x[0].value = _tstof(buff);
+			x[0].value = _tstoi(buff);
 
 			TCHAR a[256] = TEXT("\0"), b[256] = TEXT("\0");
 			switch (getChekedRadBtn(mThread.mainRadButtons[0])) {
@@ -294,7 +299,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 			else PostMessage(mThread.mainWindow, UWM_WAIT, 0, 0);
 		}
 		else {
-			if (x[1].stuck && x[2].stuck) {
+			if (x[1].stuck || x[2].stuck) {
 				isWait = true;
 				begin = clock();
 				PostMessage(mThread.mainWindow, UWM_WAIT, 0, 0);
@@ -347,6 +352,7 @@ void createWindow(HINSTANCE hInst, LPCTSTR lpzClassName) {
 	createRadBtnsGroup(hInst, mThread.mainRadButtons[0], &mThread.mainWindow);
 	createRadBtnsGroup(hInst, mThread.mainRadButtons[1], &mThread.mainWindow);
 
+	// BOOL a = RegisterHotKey(NULL, 0, 0, VK_ESCAPE);
 }
 
 void launchChildProcesses(WCHAR *a, WCHAR *b) {
@@ -371,19 +377,10 @@ void closeChildProcessesHandles(PROCESS_INFORMATION *pi) {
 }
 
 DWORD promptThread(LPVOID x) {
-	isPrompted = true;
-	int answer = MessageBox(NULL, TEXT("Do you want to continue recieving this message, or cancel the calculations?"), TEXT("Confirmation"), MB_ICONQUESTION | MB_ABORTRETRYIGNORE | MB_DEFBUTTON1);
-	isPrompted = false;
-	if (answer == IDABORT) {
-		PostMessage(mThread.mainWindow, UWM_CANCELLED, 0, 0);
-		return 0;
-	}
-	else if (answer == IDIGNORE) {
-		PostMessage(mThread.mainWindow, UWM_IGNORED, 0, 0);
-		return 0;
-	}
-	
+	int answer = 0;
+
 	do {
+		promptTime = clock();
 		Sleep(PROMPT_DELAY);
 		isPrompted = true;
 		if (!isAnswer) 
@@ -399,6 +396,6 @@ HANDLE createPromptThread() {
 	return CreateThread(NULL, 0, promptThread, (LPVOID) &mThread, 0, NULL);
 }
 
-float binOperation(float a, float b) {
+int binOperation(int a, int b) {
 	return a * b;
 }

@@ -9,23 +9,21 @@ using namespace std;
 #define DELAY 10000
 
 struct {
-	float x, answ;
+	int x, answ;
 	DWORD ID;
 } x_and_ID;
 
-float getZero(float x);
-float getNonZero(float x);
-float getZeroDelay(float x);
-float getNonZeroDelay(float x);
-float Hang(float x);
+int getZero(int x);
+int getNonZero(int x);
+int getZeroDelay(int x);
+int getNonZeroDelay(int x);
+int hang(int x);
 
 DWORD workThreadFunction(LPVOID);
-HANDLE createWorkThread(float (*)(float));
+HANDLE createWorkThread(int (*)(int));
 
 int main(int argc, char* argv[]) {
-	//MessageBoxA(NULL, "Attach now", "Debug", MB_OK);
-
-	x_and_ID.x = atof(argv[0]);
+	x_and_ID.x = atoi(argv[0]);
 	string funcName(argv[1]);
 
 	if (funcName != "") {
@@ -34,7 +32,7 @@ int main(int argc, char* argv[]) {
 		else if (funcName == "getNonZero") workThreadHandle = createWorkThread(getNonZero);
 		else if (funcName == "getZeroDelay") workThreadHandle = createWorkThread(getZeroDelay);
 		else if (funcName == "getNonZeroDelay") workThreadHandle = createWorkThread(getNonZeroDelay);
-		else if (funcName == "hang") workThreadHandle = createWorkThread(Hang);
+		else if (funcName == "hang") workThreadHandle = createWorkThread(hang);
 
 		BOOL bRet;
 		MSG uMsg;
@@ -60,35 +58,36 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-float getZero(float x) {
-	return 0.0f;
+int getZero(int x) {
+	return 0;
 }
 
-float getNonZero(float x) {
+int getNonZero(int x) {
 	return x * x;
 }
 
-float getZeroDelay(float x) {
+int getZeroDelay(int x) {
 	Sleep(DELAY);
-	return 0.0f;
+	return 0;
 }
 
-float getNonZeroDelay(float x) {
+int getNonZeroDelay(int x) {
 	Sleep(DELAY);
 	return x * x;
 }
 
-float Hang(float x) {
-	for ( ; ; );
+int hang(int x) {
+	Sleep(INFINITE);
+	return 0;
 }
 
 DWORD workThreadFunction(LPVOID getF) {
-	x_and_ID.answ = ((float (*)(float))getF)(x_and_ID.x);
+	x_and_ID.answ = ((int (*)(int))getF)(x_and_ID.x);
 	PostThreadMessage(x_and_ID.ID, WM_CLOSE, 0, 0);
 	return 0;
 }
 
-HANDLE createWorkThread(float (*getF) (float)) {
+HANDLE createWorkThread(int (*getF) (int)) {
 	x_and_ID.ID = GetCurrentThreadId();
 	return CreateThread(NULL, 0, workThreadFunction, getF, 0, NULL);
 }

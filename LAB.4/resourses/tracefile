@@ -1,0 +1,18 @@
+READ 4 ... page fault
+READ 13 ... okay
+WRITE 8533 ... page fault
+READ 5001 ... page fault
+READ 5001 ... okay
+WRITE 5081 ... okay
+WRITE 2fa7 ... okay
+READ 19aa ... okay
+WRITE cb78 ... page fault
+READ 13aba ... page fault
+READ 9c4e ... page fault
+READ a64f ... okay
+WRITE 3173 ... okay
+READ 120ee ... okay
+WRITE 120ee ... okay
+READ 120ee ... okay
+WRITE 120ee ... okay
+READ 539f ... page fault

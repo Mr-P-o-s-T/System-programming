@@ -1,0 +1,16 @@
+Scheduling Type: Interactive (Preemptive)
+Scheduling Name: Round-Robin
+Simulation Run Time: 13541
+Mean: 1100
+Standard Deviation: 510
+Process #	CPU Time	IO Blocking	CPU Completed	CPU Blocked
+0		1292 (ms)	100 (ms)	1292 (ms)	51 times
+1		1361 (ms)	500 (ms)	1361 (ms)	46 times
+2		1361 (ms)	200 (ms)	1361 (ms)	47 times
+3		1361 (ms)	30 (ms)		1361 (ms)	45 times
+4		1361 (ms)	100 (ms)	1361 (ms)	54 times
+5		1361 (ms)	50 (ms)		1361 (ms)	54 times
+6		1361 (ms)	75 (ms)		1361 (ms)	54 times
+7		1361 (ms)	30 (ms)		1361 (ms)	45 times
+8		1361 (ms)	245 (ms)	1361 (ms)	49 times
+9		1361 (ms)	1000 (ms)	1361 (ms)	46 times
