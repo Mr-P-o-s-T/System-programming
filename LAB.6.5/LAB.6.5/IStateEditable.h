@@ -11,6 +11,8 @@ public:
 	virtual bool deleteTransit(ITransit *transit) = 0;
 protected:
 	IStateEditable() = default;
-	IStateEditable(const IStateEditable&) = delete;
-	IStateEditable &operator=(const IStateEditable&) = delete;
+	IStateEditable(const IStateEditable &) = delete;
+	IStateEditable(IStateEditable &&) = delete;
+	IStateEditable & operator=(const IStateEditable &) = delete;
+	IStateEditable & operator=(IStateEditable &&) = delete;
 };

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -115,14 +115,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Automat.cpp" />
+    <ClCompile Include="DefGapTransit.cpp" />
     <ClCompile Include="DefState.cpp" />
+    <ClCompile Include="DefTransit.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SubAutomat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Automat.h" />
+    <ClInclude Include="Container.h" />
+    <ClInclude Include="DefGapTransit.h" />
     <ClInclude Include="DefState.h" />
+    <ClInclude Include="DefTransit.h" />
+    <ClInclude Include="IAutomat.h" />
+    <ClInclude Include="IComparable.h" />
     <ClInclude Include="IState.h" />
     <ClInclude Include="IStateEditable.h" />
     <ClInclude Include="ITransit.h" />
+    <ClInclude Include="IGapTransit.h" />
+    <ClInclude Include="SubAutomat.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,27 +13,96 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Файлы заголовков\Transition">
+      <UniqueIdentifier>{65553584-a5b4-4789-8239-db8499515811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Automat">
+      <UniqueIdentifier>{7004fcb2-37f5-4f47-a07b-bc5315f4aa1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\State">
+      <UniqueIdentifier>{29789a21-ccb3-442c-9c8e-d0c84d7e58fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\State">
+      <UniqueIdentifier>{3350f3d7-7172-4b4d-835b-6bd9cbb076d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Container">
+      <UniqueIdentifier>{def93580-d67c-461e-be13-489d1ef8b19e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Automat">
+      <UniqueIdentifier>{87ba9a89-aaa1-4572-9683-6d3ae84e3b02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Interface">
+      <UniqueIdentifier>{c5b44269-b41a-4caf-aef3-3e079cd1af08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Interface\Automat">
+      <UniqueIdentifier>{4b315b2e-616b-4eea-8c9b-41a7faf69129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Interface\Transition">
+      <UniqueIdentifier>{4517f1d8-524b-4654-8a58-a16650e216da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Interface\State">
+      <UniqueIdentifier>{127bafea-b9a0-4692-8157-5ae2519c5dc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Transition">
+      <UniqueIdentifier>{4fe2f90c-1cce-4b25-a8d7-3a4ee050fb65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DefState.cpp">
+    <ClCompile Include="Automat.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="DefState.cpp">
+      <Filter>Исходные файлы\State</Filter>
+    </ClCompile>
+    <ClCompile Include="DefTransit.cpp">
+      <Filter>Исходные файлы\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="DefGapTransit.cpp">
+      <Filter>Исходные файлы\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="SubAutomat.cpp">
+      <Filter>Исходные файлы\Automat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IState.h">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="IComparable.h">
+      <Filter>Файлы заголовков\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Container.h">
+      <Filter>Файлы заголовков\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="IAutomat.h">
+      <Filter>Файлы заголовков\Interface\Automat</Filter>
+    </ClInclude>
+    <ClInclude Include="IGapTransit.h">
+      <Filter>Файлы заголовков\Interface\Transition</Filter>
     </ClInclude>
     <ClInclude Include="ITransit.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\Interface\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="IState.h">
+      <Filter>Файлы заголовков\Interface\State</Filter>
     </ClInclude>
     <ClInclude Include="IStateEditable.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\Interface\State</Filter>
+    </ClInclude>
+    <ClInclude Include="SubAutomat.h">
+      <Filter>Файлы заголовков\Automat</Filter>
     </ClInclude>
     <ClInclude Include="DefState.h">
+      <Filter>Файлы заголовков\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Automat.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="DefGapTransit.h">
+      <Filter>Файлы заголовков\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="DefTransit.h">
+      <Filter>Файлы заголовков\Transition</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

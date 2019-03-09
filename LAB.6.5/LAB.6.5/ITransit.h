@@ -1,29 +1,21 @@
 #pragma once
+#include "IComparable.h"
 
 class IState;
+class IGapTransit;
 
-class ITransit {
+class ITransit : public IComparable<ITransit>, public IComparable<IGapTransit> {
 public:
 	virtual ~ITransit() = default;
 
-	virtual IState* goTo(char c) = 0;
-
-	virtual bool operator==(const ITransit &transit) const = 0;
-	virtual bool operator!=(const ITransit &transit) const {
-		return !(*this == transit);
-	};
-	virtual bool operator>(const ITransit &transit) const = 0;
-	virtual bool operator>=(const ITransit &transit) const {
-		return (*this > transit) || (*this == transit);
-	};
-	virtual bool operator<(const ITransit &transit) const {
-		return !(*this >= transit);
-	}
-	virtual bool operator<=(const ITransit &transit) const {
-		return !(*this > transit);
-	}
+	virtual char getX() const = 0;
+	virtual const char * output() const = 0;
+	virtual IState* goTo() const = 0;
 protected:
 	ITransit() = default;
-	ITransit(const ITransit&) = delete;
-	ITransit& operator=(const ITransit&) = delete;
+	ITransit(const ITransit &) = delete;
+	ITransit(ITransit &&) = delete;
+
+	ITransit & operator=(const ITransit &) = delete;
+	ITransit & operator=(ITransit &&) = delete;
 };
