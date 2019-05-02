@@ -431,6 +431,7 @@ public class Kernel extends Thread
         }
         PageFault.replacePage( memVector , virtPageNum , Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) , controlPanel );
         controlPanel.pageFaultValueLabel.setText( "YES" );
+        page.R = 1;
       } 
       else 
       {
@@ -459,10 +460,14 @@ public class Kernel extends Thread
         {
            System.out.println( "WRITE " + Long.toString(instruct.addr , addressradix) + " ... page fault" );
         }
-        PageFault.replacePage( memVector , virtPageNum , Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) , controlPanel );          controlPanel.pageFaultValueLabel.setText( "YES" );
+        PageFault.replacePage( memVector , virtPageNum , Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) , controlPanel );
+        controlPanel.pageFaultValueLabel.setText( "YES" );
+        page.M = 1;
+        page.R = 1;
       } 
       else 
       {
+        page.R = 1;
         page.M = 1;
         page.lastTouchTime = 0;
         if ( doFileLog )

@@ -1,0 +1,42 @@
+.id {
+	color : Cyan;
+}
+
+.reserved {
+	color : DarkBlue;
+}
+
+.number {
+	color : HotPink;
+}
+
+.logicalConst {
+	color : Lime;
+}
+
+.logicalOperator {
+	color : gold;
+}
+
+.operator {
+	color : blue;
+}
+
+.string {
+	color : Maroon;
+}
+
+.comment {
+	color : Gainsboro;
+}
+
+.error {
+	color : red;
+	text-decoration : underline;
+	text-decoration-style: wavy;
+}
+
+body {
+	background-color : DimGray;
+	font-size : 20px;
+}

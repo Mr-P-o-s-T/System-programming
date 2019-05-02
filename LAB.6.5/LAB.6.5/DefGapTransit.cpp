@@ -1,7 +1,9 @@
 #include "DefGapTransit.h"
 
+#include <iostream>
+
 DefGapTransit::DefGapTransit(char x, char y, const char *out, IState *nextState) : DefTransit(x, out, nextState) {
-	this->y = y;
+	this->y = toupper(static_cast<char>(y));
 	if (x > y) {
 		char tmp = x; 
 		x = y; 
@@ -10,27 +12,47 @@ DefGapTransit::DefGapTransit(char x, char y, const char *out, IState *nextState)
 }
 
 bool DefGapTransit::operator==(const ITransit & transit) const {
-	return false;
+	try {
+		const IGapTransit &gapTransit = dynamic_cast<const IGapTransit &>(transit);
+		return *this == gapTransit;
+	}
+	catch (std::bad_cast exception) {
+		return static_cast<unsigned char>(x) <= static_cast<unsigned char>(transit.getX()) 
+			&& static_cast<unsigned char>(transit.getX()) <= static_cast<unsigned char>(y);
+	}
 }
 
 bool DefGapTransit::operator>(const ITransit &transit) const {
-	return this->x > transit.getX();
+	try {
+		const IGapTransit &gapTransit = dynamic_cast<const IGapTransit &>(transit);
+		return *this > gapTransit;
+	}
+	catch (std::bad_cast exception) {
+		return static_cast<unsigned char>(this->x) > static_cast<unsigned char>(transit.getX());
+	}
 }
 
 bool DefGapTransit::operator<(const ITransit & transit) const {
-	return this->y < transit.getX();
+	try {
+		const IGapTransit &gapTransit = dynamic_cast<const IGapTransit &>(transit);
+		return *this < gapTransit;
+	}
+	catch (std::bad_cast exception) {
+		return static_cast<unsigned char>(this->y) < static_cast<unsigned char>(transit.getX());
+	}
 }
 
 bool DefGapTransit::operator==(const IGapTransit & transit) const {
-	return (this->x == transit.getX()) && (this->y == transit.getY());
+	return (static_cast<unsigned char>(this->x) == static_cast<unsigned char>(transit.getX())) 
+		&& (static_cast<unsigned char>(this->y) == static_cast<unsigned char>(transit.getY()));
 }
 
 bool DefGapTransit::operator>(const IGapTransit & transit) const {
-	return this->x > transit.getY();
+	return static_cast<unsigned char>(this->x) > static_cast<unsigned char>(transit.getY());
 }
 
 bool DefGapTransit::operator<(const IGapTransit & transit) const {
-	return this->y < transit.getX();
+	return static_cast<unsigned char>(this->y) < static_cast<unsigned char>(transit.getX());
 }
 
 char DefGapTransit::getY() const {

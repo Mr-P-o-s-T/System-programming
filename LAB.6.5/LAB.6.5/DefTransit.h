@@ -8,11 +8,12 @@ public:
 	DefTransit(char x, const char *out = nullptr, IState *nextState = nullptr);
 	virtual ~DefTransit() = default;
 
-	const char *output() const;
+	const char * output(char x) const;
 	IState* goTo() const;
 
 	virtual bool operator==(const ITransit &transit) const;
 	virtual bool operator>(const ITransit &transit) const;
+	virtual bool operator<(const ITransit &transit) const;
 
 	virtual bool operator==(const IGapTransit &transit) const;
 	virtual bool operator>(const IGapTransit &transit) const;

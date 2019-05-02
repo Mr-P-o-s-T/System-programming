@@ -1,0 +1,10 @@
+READ 0 ... page fault
+READ 8000 ... page fault
+READ 4000 ... page fault
+WRITE 4000 ... okay
+WRITE c000 ... page fault
+WRITE 10000 ... page fault
+READ 0 ... page fault
+READ 14000 ... page fault
+READ 4000 ... page fault
+READ 4000 ... okay

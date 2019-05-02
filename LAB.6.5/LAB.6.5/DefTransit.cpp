@@ -8,12 +8,12 @@
 using std::cout;
 
 DefTransit::DefTransit(char x, const char *out, IState *nextState) {
-	this->x = x;
+	this->x = toupper(static_cast<char>(x));
 	this->out = out;
 	this->nextState = nextState;
 }
 
-const char * DefTransit::output() const {
+const char * DefTransit::output(char x) const {
 	return out;
 }
 
@@ -22,11 +22,33 @@ IState * DefTransit::goTo() const {
 }
 
 bool DefTransit::operator==(const ITransit &transit) const {
-	return this->x == transit.getX();
+	try {
+		const IGapTransit &gapTransit = dynamic_cast<const IGapTransit &>(transit);
+		return *this == gapTransit;
+	}
+	catch (std::bad_cast exception) {
+		return static_cast<unsigned char>(this->x) == static_cast<unsigned char>(transit.getX());
+	}
 }
 
 bool DefTransit::operator>(const ITransit &transit) const {
-	return this->x > transit.getX();
+	try {
+		const IGapTransit &gapTransit = dynamic_cast<const IGapTransit &>(transit);
+		return *this > gapTransit;
+	}
+	catch (std::bad_cast exception) {
+		return static_cast<unsigned char>(this->x) > static_cast<unsigned char>(transit.getX());
+	}
+}
+
+bool DefTransit::operator<(const ITransit & transit) const {
+	try {
+		const IGapTransit &gapTransit = dynamic_cast<const IGapTransit &>(transit);
+		return *this < gapTransit;
+	}
+	catch (std::bad_cast exception) {
+		return static_cast<unsigned char>(this->x) < static_cast<unsigned char>(transit.getX());
+	}
 }
 
 bool DefTransit::operator==(const IGapTransit & transit) const {
@@ -34,11 +56,11 @@ bool DefTransit::operator==(const IGapTransit & transit) const {
 }
 
 bool DefTransit::operator>(const IGapTransit & transit) const {
-	return transit.getY() < x;
+	return static_cast<unsigned char>(transit.getY()) < static_cast<unsigned char>(x);
 }
 
 bool DefTransit::operator<(const IGapTransit & transit) const {
-	return transit.getX() > x;
+	return static_cast<unsigned char>(transit.getX()) > static_cast<unsigned char>(x);
 }
 
 char DefTransit::getX() const {

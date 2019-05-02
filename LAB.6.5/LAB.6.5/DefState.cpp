@@ -3,11 +3,13 @@
 #include "DefTransit.h"
 #include "Container.h"
 
-DefState::DefState() {
+DefState::DefState(const char *name) {
+	this->name = name;
 	transits = new Container<ITransit *>();
 }
 
-DefState::DefState(ITransit ** data, size_t length) {
+DefState::DefState(const char *name, ITransit ** data, size_t length) {
+	this->name = name;
 	transits = new Container<ITransit *>(data, length);
 }
 
@@ -16,9 +18,10 @@ DefState::~DefState() {
 }
 
 ITransit * DefState::getTransition(char x) {
-	ITransit *tmp = new DefTransit(x), *transit = (*transits)[0];
+	DefTransit tmp(x);
+	ITransit *transit = (*transits)[0];
 	for (size_t i = 0; transit; i++, transit = (*transits)[i])
-		if (*transit == *tmp) return transit;
+		if (*transit == tmp) return transit;
 	return nullptr;
 }
 
@@ -39,5 +42,9 @@ inline bool DefState::operator==(const IState & state) const {
 }
 
 inline bool DefState::operator>(const IState & state) const {
+	return false;
+}
+
+bool DefState::operator<(const IState & state) const {
 	return false;
 }

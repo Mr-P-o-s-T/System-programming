@@ -1,0 +1,13 @@
+.GT.
+.LT.
+.GE.
+.LE.
+.NE.
+.EQ.
+.NEQV.
+.OR.
+.AND.
+.NOT.
+.FALSE.
+.TRUE.
+.EQV.

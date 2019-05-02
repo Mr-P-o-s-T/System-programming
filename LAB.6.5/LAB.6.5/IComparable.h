@@ -5,9 +5,7 @@ class IComparable {
 public:
 	virtual bool operator==(const ComparableWith &transit) const = 0;
 	virtual bool operator>(const ComparableWith &transit) const = 0;
-	virtual bool operator<(const ComparableWith &transit) const {
-		return !(*this >= transit);
-	}
+	virtual bool operator<(const ComparableWith &transit) const = 0;
 
 	virtual bool operator!=(const ComparableWith &transit) const {
 		return !(*this == transit);

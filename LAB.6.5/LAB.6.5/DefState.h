@@ -9,11 +9,14 @@ class ITransit;
 
 class DefState : public IState, public IStateEditable {
 public:
-	DefState();
-	DefState(ITransit **data, size_t length);
+	DefState(const char *name);
+	DefState(const char *name, ITransit **data, size_t length);
 	virtual ~DefState();
 
 	bool isSubAutomat() {
+		return false;
+	}
+	bool isBuffState() {
 		return false;
 	}
 	ITransit *getTransition(char x);
@@ -24,6 +27,8 @@ public:
 
 	bool operator==(const IState &state) const;
 	bool operator>(const IState &state) const;
+	bool operator<(const IState &state) const;
 protected:
+	const char *name;
 	Container<ITransit *> *transits;
 };

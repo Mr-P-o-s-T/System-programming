@@ -6,7 +6,7 @@ class Container;
 
 class SubAutomat : public IAutomat {
 public:
-	SubAutomat();
+	SubAutomat(const char* name);
 	virtual ~SubAutomat();
 
 	void addState(IState *state);
@@ -14,8 +14,11 @@ public:
 	bool deleteState(IState *state);
 
 	void setStartState(IState *start);
+	virtual IState * getStartState();
 	void goTo(IState *state);
+	IState * getCurrState();
 	void setEndState(IState *end);
+	virtual IState * getEndState();
 
 	void reset();
 	bool isDone();
@@ -23,13 +26,15 @@ public:
 	bool isSubAutomat() {
 		return true;
 	}
+	bool isBuffState();
 	ITransit* getTransition(char x);
 
 	bool operator==(const IState &state) const;
 	bool operator>(const IState &state) const;
+	bool operator<(const IState &state) const;
 protected:
+	const char* name;
 	IState *startState, *currState, *endState;
 	Container<IState *> *states;
-	Container<IAutomat *> *subAutomats;
+	bool subAutoEndSt = false;
 };
-

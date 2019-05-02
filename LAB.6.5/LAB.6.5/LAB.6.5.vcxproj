@@ -116,25 +116,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Automat.cpp" />
+    <ClCompile Include="BuffState.cpp" />
+    <ClCompile Include="Data.cpp" />
+    <ClCompile Include="DataHolder.cpp" />
+    <ClCompile Include="DefaultCaseTransit.cpp" />
     <ClCompile Include="DefGapTransit.cpp" />
     <ClCompile Include="DefState.cpp" />
     <ClCompile Include="DefTransit.cpp" />
+    <ClCompile Include="HTMLParser.cpp" />
+    <ClCompile Include="InputCopyTransit.cpp" />
+    <ClCompile Include="InputGapCopyTransit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SubAutomat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Automat.h" />
+    <ClInclude Include="BuffState.h" />
     <ClInclude Include="Container.h" />
+    <ClInclude Include="DataHolder.h" />
+    <ClInclude Include="DefaultCaseTransit.h" />
     <ClInclude Include="DefGapTransit.h" />
     <ClInclude Include="DefState.h" />
     <ClInclude Include="DefTransit.h" />
+    <ClInclude Include="HTMLParser.h" />
     <ClInclude Include="IAutomat.h" />
     <ClInclude Include="IComparable.h" />
+    <ClInclude Include="Data.h" />
+    <ClInclude Include="InputCopyTransit.h" />
+    <ClInclude Include="InputGapCopyTransit.h" />
     <ClInclude Include="IState.h" />
     <ClInclude Include="IStateEditable.h" />
     <ClInclude Include="ITransit.h" />
     <ClInclude Include="IGapTransit.h" />
     <ClInclude Include="SubAutomat.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="output.html" />
+    <None Include="TransitsClassDiagram.cd" />
+    <None Include="input.f" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

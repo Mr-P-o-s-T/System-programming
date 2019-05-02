@@ -25,9 +25,6 @@
     <Filter Include="Файлы заголовков\State">
       <UniqueIdentifier>{3350f3d7-7172-4b4d-835b-6bd9cbb076d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Файлы заголовков\Container">
-      <UniqueIdentifier>{def93580-d67c-461e-be13-489d1ef8b19e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Файлы заголовков\Automat">
       <UniqueIdentifier>{87ba9a89-aaa1-4572-9683-6d3ae84e3b02}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,15 @@
     </Filter>
     <Filter Include="Исходные файлы\Transition">
       <UniqueIdentifier>{4fe2f90c-1cce-4b25-a8d7-3a4ee050fb65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Container">
+      <UniqueIdentifier>{966078f1-1b3b-4e41-baf2-8a72d90aa9f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Database">
+      <UniqueIdentifier>{e299ff28-dfa3-45a0-8f27-4d6fcd5d9250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Database">
+      <UniqueIdentifier>{121cc29f-4252-46a3-ba4b-28447b133694}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -66,13 +72,31 @@
     <ClCompile Include="SubAutomat.cpp">
       <Filter>Исходные файлы\Automat</Filter>
     </ClCompile>
+    <ClCompile Include="InputCopyTransit.cpp">
+      <Filter>Исходные файлы\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="InputGapCopyTransit.cpp">
+      <Filter>Исходные файлы\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultCaseTransit.cpp">
+      <Filter>Исходные файлы\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="BuffState.cpp">
+      <Filter>Исходные файлы\State</Filter>
+    </ClCompile>
+    <ClCompile Include="DataHolder.cpp">
+      <Filter>Исходные файлы\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Data.cpp">
+      <Filter>Исходные файлы\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLParser.cpp">
+      <Filter>Исходные файлы\Database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IComparable.h">
       <Filter>Файлы заголовков\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Container.h">
-      <Filter>Файлы заголовков\Container</Filter>
     </ClInclude>
     <ClInclude Include="IAutomat.h">
       <Filter>Файлы заголовков\Interface\Automat</Filter>
@@ -104,5 +128,38 @@
     <ClInclude Include="DefTransit.h">
       <Filter>Файлы заголовков\Transition</Filter>
     </ClInclude>
+    <ClInclude Include="InputCopyTransit.h">
+      <Filter>Файлы заголовков\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="InputGapCopyTransit.h">
+      <Filter>Файлы заголовков\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultCaseTransit.h">
+      <Filter>Файлы заголовков\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffState.h">
+      <Filter>Файлы заголовков\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Container.h">
+      <Filter>Файлы заголовков\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="DataHolder.h">
+      <Filter>Файлы заголовков\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Файлы заголовков\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLParser.h">
+      <Filter>Файлы заголовков\Database</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="input.f">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="TransitsClassDiagram.cd" />
+    <None Include="output.html">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>

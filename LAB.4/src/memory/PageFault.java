@@ -12,10 +12,10 @@ package memory;
 import java.util.*;
 
 public class PageFault {
-
+    static Page lastUnchanged;
   static CycledList<Page> cycledList = new CycledList<>();
 
-  private static boolean SwapPage(Vector mem , int virtPageNum , int replacePageNum , ControlPanel controlPanel, Page page) {
+  private static boolean SwapPage(Vector mem , int replacePageNum , ControlPanel controlPanel, Page page) {
       Page newPage = (Page) mem.get(replacePageNum);
       newPage.physical = page.physical;
       controlPanel.removePhysicalPage(page.id);
@@ -29,8 +29,8 @@ public class PageFault {
       return true;
   }
 
-  public static void replacePage ( Vector mem , int virtPageNum , int replacePageNum , ControlPanel controlPanel ) {
-    int t = 10;
+  public static void replacePage(Vector mem , int virtPageNum , int replacePageNum , ControlPanel controlPanel) {
+    int t = 30;
     boolean mapped = false, updated = false;
 
     if (cycledList.getNumber() < (virtPageNum + 1) / 2) {
@@ -40,37 +40,37 @@ public class PageFault {
       controlPanel.addPhysicalPage(newPage.physical, replacePageNum);
     }
     else {
+        lastUnchanged = null;
       Page page = cycledList.get(), start = null;
       while (!mapped) {
         if (page != start) {
+            if (start == null) start = page;
+            lastUnchanged = (page.M > 0) ? lastUnchanged : page ;
           if (page.R == 1) {
             page.R = 0;
             page.lastTouchTime = 0;
-            if (start == null) start = page;
             page = cycledList.getNext();
           } else {
-
             if (page.lastTouchTime > t) {
               if (page.M == 1) {
                 page.M = 0;
                 updated = true;
-                if (start == null) start = page;
                 page = cycledList.getNext();
               } else {
-                  mapped = SwapPage(mem, virtPageNum, replacePageNum, controlPanel, page);
+                  mapped = SwapPage(mem, replacePageNum, controlPanel, page);
               }
             } else {
-              if (start == null) start = page;
               page = cycledList.getNext();
             }
           }
         } else {
           if (updated) start = null;
           else {
-              mapped = SwapPage(mem, virtPageNum, replacePageNum, controlPanel, page);
+              if (lastUnchanged == null) mapped = SwapPage(mem, replacePageNum, controlPanel, page);
+              else mapped = SwapPage(mem, replacePageNum, controlPanel, lastUnchanged);
           }
         }
       }
     }
-  }
+   }
 }

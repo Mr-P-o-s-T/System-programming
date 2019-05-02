@@ -11,8 +11,10 @@ public:
 	virtual bool deleteState(IState *) = 0;
 
 	virtual void setStartState(IState *) = 0;
+	virtual IState *getStartState() = 0;
 	virtual void goTo(IState *) = 0;
 	virtual void setEndState(IState *) = 0;
+	virtual IState *getEndState() = 0;
 
 	virtual void reset() = 0;
 	virtual bool isDone() = 0;

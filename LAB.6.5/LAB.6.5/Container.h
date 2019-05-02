@@ -1,94 +1,70 @@
 #pragma once
+#include <vector>
 
-template <class T>
+template<class T>
 class Container {
 public:
-	Container(int capacity = 4) : capacity(capacity) {
-		data = new T[capacity];
+	Container(int capacity = 4) {
+		data.reserve(capacity);
 	}
-	Container(const Container &container) : length(container.length), capacity(container.capacity) {
-		data = new T[capacity];
-		copy(container.data, data, length);
+	Container(const Container &container) {
+		data = container.data;
 	}
 	Container(Container &&container) {
 		{
-			T *tmp = data;
+			std::vector<T> tmp = data;
 			data = container.data;
 			container.data = tmp;
 		}
-		{
-			size_t tmp = length;
-			length = container.length;
-			container.length = tmp;
-
-			tmp = capacity;
-			capacity = container.capacity;
-			container.capacity = tmp;
-		}
 	}
-	Container(T *data, size_t length) : data(data), length(length), capacity(length) { }
+	Container(T *data, size_t size) {
+		for (size_t i = 0; i < size; i++) this->data.push_back(data[i]);
+	}
 
 	~Container() {
-		for (size_t i = 0; i < length; i++)	if (data[i] != nullptr) delete data[i];
-		if (data) delete[] data;
+		for (size_t i = 0; i < data.size(); i++)	
+			if (data[i] != nullptr) delete data[i];
 	}
 
 	Container & operator=(const Container &container) {
-		length = container.length;
-		capacity = container.capacity;
-		data = new T[capacity];
-		copy(container.data, data, length);
+		data = container.data;
 	}
 	Container & operator=(Container &&container) {
 		{
-			T *tmp = data;
+			std::vector<T> tmp = data;
 			data = container.data;
 			container.data = tmp;
-		}
-		{
-			size_t tmp = length;
-			length = container.length;
-			container.length = tmp;
-
-			tmp = capacity;
-			capacity = container.capacity;
-			container.capacity = tmp;
 		}
 	}
 
 	void addElement(T element) {
-		if (length >= capacity) extend();
 		size_t i;
-		for (i = 0; i < length; i++)
+		for (i = 0; i < data.size(); i++)
 			if (*(data[i]) > *element) {
-				copy(data + i, data + i + 1, length - i, true);
-				/*int len = length - i;
-				for (T *currV = (data + length - 1); len > 0; len--, currV--) *(currV + 1) = *currV;*/
-				length++;
+				data.insert(data.cbegin() + i, element);
 				break;
 			}
-		if (i == length) {
-			data[i] = element;
-			length++;
-		}
+		if (i == data.size()) data.push_back(element);
 	}
 	T operator[](size_t i) {
-		if (0 <= i && i < length) return data[i];
-		return nullptr;
+		try {
+			return data.at(i);
+		}
+		catch (...) {
+			return nullptr;
+		}
+
 	}
 	size_t getIndex(T element) {
-		for (size_t i = 0; i < length; i++)
+		for (size_t i = 0; i < data.size(); i++)
 			if (data[i] == element) return i;
-		return length;
+		return data.size();
 	}
 	bool deleteElement(int i) {
-		T deletable = (*this)[i];
+		T deletable = data[i];
 		if (deletable) {
+			data.erase(data.cbegin() + i);
 			delete deletable;
-			copy(data + i + 1, data + i, length - i - 1);
-			/*int len = length - i - 1;
-			for (T *curV = (data + i); len > 0; curV++, len--) *curV = *(curV + 1);*/
-			length--;
 		}
 		return deletable;
 	}
@@ -99,23 +75,11 @@ public:
 	}
 
 	size_t getLength() {
-		return length;
+		return data.size();
 	}
 	size_t getCapacity() {
-		return capacity;
+		return data.capacity();
 	}
 private:
-	T *data = nullptr;
-	size_t length = 0, capacity = 0;
-
-	static void copy(T *origin, T *destination, size_t length, bool reverse = false) {
-		if (reverse) for (T *newV = destination, *oldV = origin; length > 0; newV--, oldV--, length--) *newV = *oldV;
-		else for (T *newV = destination, *oldV = origin; length > 0; newV++, oldV++, length--) *newV = *oldV;
-	}
-	void extend() {
-		T *tmp = new T[capacity <<= 1];
-		copy(data, tmp, length);
-		delete[] data;
-		data = tmp;
-	}
+	std::vector<T> data;
 };
