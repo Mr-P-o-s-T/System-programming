@@ -3,7 +3,7 @@
 #include <iostream>
 
 DefGapTransit::DefGapTransit(char x, char y, const char *out, IState *nextState) : DefTransit(x, out, nextState) {
-	this->y = toupper(static_cast<char>(y));
+	this->y = toupper(static_cast<unsigned char>(y));
 	if (x > y) {
 		char tmp = x; 
 		x = y; 

@@ -35,7 +35,7 @@ void HTMLParser::finishOutputFile(std::ofstream & output) {
 }
 
 string HTMLParser::parse(const string &str, const char *type) {
-	if ((type[0] == '@') && (str.size() > 0)) {
+	if ((type[0] == 3) && (str.size() > 0)) {
 		size_t i;
 		for (i = 0; i < str.size() && ((str[i] == ' ') || 
 			(str[i] == '\t') || (str[i] == '\n')); i++);

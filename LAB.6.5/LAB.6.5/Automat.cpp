@@ -33,14 +33,14 @@ void Automat::ProcessFile() {
 }
 
 void Automat::processSymbol() {
-	static char sym = '@';
-	if ((!automat->isBuffState()) || (sym == '@')) {
+	static char sym = 3;
+	if ((!automat->isBuffState()) || (sym == 3)) {
 		if (input.eof()) sym = '\0';
 		else input.get(sym);
 	}
 	ITransit * tmp = automat->getTransition(sym);
 	const char *out = tmp->output(sym);
-	if (out[0] == '@') {
+	if (out[0] == 3) {
 		output << parser->parse(buff, out);
 		buff = "";
 	}
@@ -102,7 +102,7 @@ SubAutomat * Automat::buildAutomat() {
 		start->addTransit(new InputCopyTransit('.', dotUsage));
 		dotUsage->addTransit(new InputGapCopyTransit('0', '9', fractPart));
 		dotUsage->addTransit(new InputGapCopyTransit('A', 'Z', logicExpr));
-		dotUsage->addTransit(new DefaultCaseTransit("@", start));
+		dotUsage->addTransit(new DefaultCaseTransit("\3", start));
 
 		DefState *sepHandler = new DefState("sepHandler");
 		automat->addState(sepHandler);
@@ -119,7 +119,7 @@ SubAutomat * Automat::buildAutomat() {
 		automat->addState(errHandl);
 
 		start->addTransit(new InputGapCopyTransit(0, 255, errHandl));
-		errHandl->addTransit(new DefaultCaseTransit("@", automat->getStartState()));
+		errHandl->addTransit(new DefaultCaseTransit("\3", automat->getStartState()));
 	}
 
 	// TODO: Add build code
@@ -131,7 +131,7 @@ SubAutomat * Automat::buildAutomat() {
 		id->addTransit(new InputGapCopyTransit('A', 'Z', id));
 		id->addTransit(new InputGapCopyTransit('0', '9', id));
 		id->addTransit(new InputCopyTransit('_', id));
-		id->addTransit(new DefaultCaseTransit("@i", automat->getStartState()));
+		id->addTransit(new DefaultCaseTransit("\3i", automat->getStartState()));
 	}
 
 	{
@@ -179,7 +179,7 @@ SubAutomat * Automat::buildAutomat() {
 			DefState *idChain = new DefState("wholeSpeciePartIdChain");
 			wholeSpeciePart->addState(idChain);
 			start->addTransit(new InputGapCopyTransit('A', 'Z', idChain));
-			start->addTransit(new DefaultCaseTransit("@", end));
+			start->addTransit(new DefaultCaseTransit("\3", end));
 			idChain->addTransit(new InputGapCopyTransit('A', 'Z', idChain));
 			idChain->addTransit(new InputGapCopyTransit('0', '9', idChain));
 			idChain->addTransit(new InputCopyTransit('_', idChain));
@@ -227,9 +227,9 @@ SubAutomat * Automat::buildAutomat() {
 			DefState *numChain = new DefState("stepPartNumChain");
 			stepPart->addState(numChain);
 			start->addTransit(new InputGapCopyTransit('0', '9', numChain));
-			start->addTransit(new DefaultCaseTransit("@", end));
+			start->addTransit(new DefaultCaseTransit("\3", end));
 			sign->addTransit(new InputGapCopyTransit('0', '9', numChain));
-			sign->addTransit(new DefaultCaseTransit("@", end));
+			sign->addTransit(new DefaultCaseTransit("\3", end));
 			numChain->addTransit(new InputGapCopyTransit('0', '9', numChain));
 			numChain->addTransit(new DefaultCaseTransit("", end));
 
@@ -255,7 +255,7 @@ SubAutomat * Automat::buildAutomat() {
 			DefState *idChain = new DefState("speciePartIdChain");
 			speciePart->addState(idChain);
 			start->addTransit(new InputGapCopyTransit('A', 'Z', idChain));
-			start->addTransit(new DefaultCaseTransit("@", end));
+			start->addTransit(new DefaultCaseTransit("\3", end));
 			idChain->addTransit(new InputGapCopyTransit('A', 'Z', idChain));
 			idChain->addTransit(new InputGapCopyTransit('0', '9', idChain));
 			idChain->addTransit(new InputCopyTransit('_', idChain));
@@ -266,7 +266,7 @@ SubAutomat * Automat::buildAutomat() {
 
 		end->addTransit(new DefTransit('\'', "", strings));
 		end->addTransit(new DefTransit('"', "", strings));
-		end->addTransit(new DefaultCaseTransit("@n", automat->getStartState()));
+		end->addTransit(new DefaultCaseTransit("\3n", automat->getStartState()));
 	}
 
 	{
@@ -283,10 +283,10 @@ SubAutomat * Automat::buildAutomat() {
 		DefState *dot = new DefState("logicExprDot");
 		logicExpr->addState(dot);
 		start->addTransit(new InputCopyTransit('.', dot));
-		start->addTransit(new DefaultCaseTransit("@", end));
+		start->addTransit(new DefaultCaseTransit("\3", end));
 		dot->addTransit(new DefaultCaseTransit("", end));
 
-		end->addTransit(new DefaultCaseTransit("@l", automat->getStartState()));
+		end->addTransit(new DefaultCaseTransit("\3l", automat->getStartState()));
 	}
 
 	{
@@ -366,7 +366,7 @@ SubAutomat * Automat::buildAutomat() {
 
 		secondOpSym->addTransit(new DefaultCaseTransit("", end));
 
-		end->addTransit(new DefaultCaseTransit("@o", automat->getStartState()));
+		end->addTransit(new DefaultCaseTransit("\3o", automat->getStartState()));
 	}
 
 	{
@@ -382,8 +382,8 @@ SubAutomat * Automat::buildAutomat() {
 		strings->addState(strChain);
 		start->addTransit(new InputCopyTransit('\'', strChain));
 		start->addTransit(new InputCopyTransit('"', strChain));
-		strChain->addTransit(new DefTransit('\n', "@", end));
-		strChain->addTransit(new DefTransit('\0', "@", end));
+		strChain->addTransit(new DefTransit('\n', "\3", end));
+		strChain->addTransit(new DefTransit('\0', "\3", end));
 
 		DefState *sepUse = new DefState("stringsSepUse");
 		strings->addState(sepUse);
@@ -406,17 +406,17 @@ SubAutomat * Automat::buildAutomat() {
 		newStringUse->addTransit(new InputCopyTransit('&', amperUse));
 		newStringUse->addTransit(new InputCopyTransit('\t', newStringUse));
 		newStringUse->addTransit(new InputCopyTransit(' ', newStringUse));
-		newStringUse->addTransit(new DefaultCaseTransit("@", end));
+		newStringUse->addTransit(new DefaultCaseTransit("\3", end));
 
-		end->addTransit(new DefaultCaseTransit("@s", automat->getStartState()));
+		end->addTransit(new DefaultCaseTransit("\3s", automat->getStartState()));
 	}
 
 	{
 		// Comments
 		automat->addState(comments);
 
-		comments->addTransit(new DefTransit('\n', "@c", automat->getStartState()));
-		comments->addTransit(new DefTransit('\0', "@c", automat->getStartState()));
+		comments->addTransit(new DefTransit('\n', "\3c", automat->getStartState()));
+		comments->addTransit(new DefTransit('\0', "\3c", automat->getStartState()));
 		comments->addTransit(new InputGapCopyTransit(1, 255, comments));
 	}
 
