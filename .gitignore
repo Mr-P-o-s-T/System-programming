@@ -259,6 +259,3 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-
-# System Programming oupput file
-LAB.6.5/LAB.6.5/output.html
