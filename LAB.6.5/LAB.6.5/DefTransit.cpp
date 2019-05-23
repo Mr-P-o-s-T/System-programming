@@ -8,7 +8,7 @@
 using std::cout;
 
 DefTransit::DefTransit(char x, const char *out, IState *nextState) {
-	this->x = toupper(static_cast<char>(x));
+	this->x = toupper(static_cast<unsigned char>(x));
 	this->out = out;
 	this->nextState = nextState;
 }
